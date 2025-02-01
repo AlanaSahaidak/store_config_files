@@ -29,12 +29,6 @@
         line: "-Xms1g\n-Xmx1g"
         insertafter: EOF
 
-    - name: Configure Elasticsearch
-      lineinfile:
-        path: /etc/elasticsearch/elasticsearch.yml
-        line: "network.host: _local_" 
-        insertafter: "^#network.host"
-
     - name: Start Elasticsearch
       service:
         name: elasticsearch
