@@ -1,0 +1,36 @@
+---
+- name: Install Elasticsearch
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install OpenJDK 11 (Amazon Corretto)
+      dnf:
+        name: java-11-amazon-corretto
+        state: present
+
+    - name: Add Elasticsearch repository
+      get_url:
+        url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.5.1-x86_64.rpm
+        dest: /var/tmp/elasticsearch.rpm
+
+    - name: Import GPG key for Elasticsearch
+      rpm_key:
+        state: present
+        key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+    - name: Install Elasticsearch
+      dnf:
+        name: /var/tmp/elasticsearch.rpm
+        state: present
+
+    - name: Configure Elasticsearch
+      lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "network.host: _local_" 
+        insertafter: "^#network.host"
+
+    - name: Start Elasticsearch
+      service:
+        name: elasticsearch
+        enabled: yes
+
