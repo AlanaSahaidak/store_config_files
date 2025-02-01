@@ -23,6 +23,12 @@
         name: /var/tmp/elasticsearch.rpm
         state: present
 
+    - name: Configure heap size
+      lineinfile:
+        path: /etc/elasticsearch/jvm.options
+        line: "-Xms1g\n-Xmx1g"
+        insertafter: EOF
+
     - name: Configure Elasticsearch
       lineinfile:
         path: /etc/elasticsearch/elasticsearch.yml
